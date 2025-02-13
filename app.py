@@ -1,12 +1,12 @@
 import gradio as gr
 import torch
 import os
-import sys
-from loadimg import load_img
-from ben_base import BEN_Base
 import random
 import numpy as np
 import huggingface_hub
+from loadimg import load_img
+from ben_base import BEN_Base
+from tqdm import tqdm
 from gradio.themes import Base
 from gradio.themes.utils import colors, fonts, sizes
 
@@ -25,11 +25,9 @@ torch.set_float32_matmul_precision("high")
 model = BEN_Base()
 
 models_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
-if not os.path.exists(models_dir):
-    os.makedirs(models_dir)
+os.makedirs(models_dir, exist_ok=True)
 
 model_path = os.path.join(models_dir, "BEN2_Base.pth")
-
 if not os.path.exists(model_path):
     model_path = huggingface_hub.hf_hub_download(
         repo_id="PramaLLC/BEN2",
@@ -46,8 +44,7 @@ model.to(device)
 model.eval()
 
 output_folder = 'output_images'
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
+os.makedirs(output_folder, exist_ok=True)
 
 def fn(image):
     im = load_img(image, output_type="pil")
@@ -58,12 +55,16 @@ def fn(image):
     return result_image, image_path
 
 def process(image):
-    foreground = model.inference(image)
-    print(type(foreground))
+    print("Processing image...")
+    with tqdm(total=100, desc="Processing", unit="%", ncols=100) as pbar:
+        foreground = model.inference(image)  # Replace with actual processing logic
+        for i in range(10):  # Example of progress simulation
+            pbar.update(10)  
+    print("Processing complete.")
     return foreground
 
 def process_file(f):
-    name_path = f.rsplit(".",1)[0]+".png"
+    name_path = f.rsplit(".", 1)[0] + ".png"
     im = load_img(f, output_type="pil")
     im = im.convert("RGB")
     transparent = process(im)
