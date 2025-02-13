@@ -24,16 +24,13 @@ torch.set_float32_matmul_precision("high")
 
 model = BEN_Base()
 
-# Create models directory if it doesn't exist
 models_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
 if not os.path.exists(models_dir):
     os.makedirs(models_dir)
 
 model_path = os.path.join(models_dir, "BEN2_Base.pth")
 
-# Check if the model file exists locally
 if not os.path.exists(model_path):
-    # Download the model file from Hugging Face Hub
     model_path = huggingface_hub.hf_hub_download(
         repo_id="PramaLLC/BEN2",
         filename="BEN2_Base.pth",
@@ -41,11 +38,9 @@ if not os.path.exists(model_path):
         local_dir_use_symlinks=False
     )
 
-# Check if CUDA is available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-# Load model
 model.loadcheckpoints(model_path)
 model.to(device)
 model.eval()
@@ -75,7 +70,6 @@ def process_file(f):
     transparent.save(name_path)
     return name_path
 
-# Create a custom theme
 class ModernTheme(Base):
     def __init__(self):
         super().__init__(
@@ -87,7 +81,6 @@ class ModernTheme(Base):
             radius_size=sizes.radius_md,
         )
 
-# Create the Gradio interface with enhanced styling
 def create_interface():
     with gr.Blocks(theme=ModernTheme()) as demo:
         gr.Markdown(
@@ -125,7 +118,6 @@ def create_interface():
                     file_count="single"
                 )
         
-        # Add footer with additional information
         gr.Markdown(
             """
             ### Tips
@@ -133,7 +125,7 @@ def create_interface():
             - Supported formats: JPG, PNG, WEBP
             - Maximum image size: 4096x4096 pixels
             
-            [View Model on Hugging Face](https://huggingface.co/PramaLLC/BEN2) | [Report Issues](https://github.com/yourusername/yourrepo/issues)
+            [View Model on Hugging Face](https://huggingface.co/PramaLLC/BEN2)
             """
         )
         
@@ -145,7 +137,6 @@ def create_interface():
     
     return demo
 
-# Create and launch the interface
 demo = create_interface()
 
 if __name__ == "__main__":
