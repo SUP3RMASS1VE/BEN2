@@ -2,6 +2,7 @@
 
 ## Description
 BEN2 Background Remover is an AI-powered tool designed to remove backgrounds from images with high precision. It utilizes the BEN_Base model for processing images and is implemented using Gradio for an interactive web-based interface.
+![Screenshot 2025-03-10 233530](https://github.com/user-attachments/assets/e9173e8b-f8a3-47a5-b60c-b492906e62e2)
 
 ## Features
 - Removes backgrounds from images efficiently
