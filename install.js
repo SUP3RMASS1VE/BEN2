@@ -1,33 +1,25 @@
 module.exports = {
   run: [
-    // Delete this step if your project does not use torch
+    // Install requirements first
+    {
+      method: "shell.run",
+      params: {
+        venv: "env",
+        message: [
+          "uv pip install -r requirements.txt",
+        ],
+      }
+    },
+    // Then install torch
     {
       method: "script.start",
       params: {
         uri: "torch.js",
         params: {
-          venv: "env",                // Edit this to customize the venv folder path
+          venv: "env",
           // xformers: true   // uncomment this line if your project requires xformers
         }
-      }
-    },
-    // Edit this step with your custom install commands
-    {
-      method: "shell.run",
-      params: {
-        venv: "env",                // Edit this to customize the venv folder path
-        message: [
-          "uv pip install gradio devicetorch",
-          "uv pip install -r requirements.txt"
-        ],
-      }
-    },
-    {
-      method: "fs.link",
-      params: {
-        venv: "env"
       }
     }
   ]
 }
-
